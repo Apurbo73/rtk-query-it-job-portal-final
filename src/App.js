@@ -1,56 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import React from "react";
+
+import "./App.css";
+import { useGetAllJobsQuery } from "./features/apiSlice";
+import Home from "./components/Home";
 
 function App() {
+  const { data: allJobs, isLoading, isError } = useGetAllJobsQuery();
+  //decide what to ender:
+  let content = null;
+  if (isLoading) {
+    content = <div>Loading....</div>;
+  }
+  if (!isLoading && isError) {
+    content = <div>Something went wrong....</div>;
+  }
+  if (!isLoading && !isError) {
+    content = allJobs && <Home allJobs={allJobs} />;
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+      {content}
     </div>
   );
 }
